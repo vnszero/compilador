@@ -119,6 +119,8 @@ inline std::string tt2str(enum TokenType type){
 			return "NUMBER";
 		case TT_ID:
 			return "ID";
+		default:
+			throw std::string("invalid token type");
 	}
 }
 
