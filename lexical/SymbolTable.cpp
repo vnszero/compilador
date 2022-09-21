@@ -1,5 +1,5 @@
 #include "SymbolTable.h"
-
+#include<string>
 SymbolTable::SymbolTable(){
 	// Symbols
 	m_symbols[";"] = TT_SEMICOLON;
@@ -41,6 +41,6 @@ SymbolTable::~SymbolTable(){
 bool SymbolTable::contains(const std::string& token) const {
 	return m_symbols.find(token) != m_symbols.end();
 }
-enum TokenType SymbolTable::find(const std::string token) const {
+enum TokenType SymbolTable::find(const std::string token) {
 	return this->contains(token) ? m_symbols[token] : m_symbols[TT_INVALID_TOKEN];
 }

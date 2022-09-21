@@ -3,7 +3,7 @@ CXXFLAGS=-g -ggdb -O2 -Wall
 
 TARGET = main
 
-OBJS = main.o
+OBJS = main.o lexical/SymbolTable.o lexical/LexicalAnalysis.o:
 
 all: $(TARGET)
 
@@ -14,6 +14,11 @@ install:
 	cp $(TARGET) /usr/local/bin
 
 main.o:
+
+lexical/SymbolTable.o: lexical/TokenType.h
+
+lexical/LexicalAnalysis.o: lexical/Lexeme.h lexical/SymbolTable.h
+
 
 $(TARGET):	$(OBJS)
 			$(CXX) -o $(TARGET) $(OBJS)
