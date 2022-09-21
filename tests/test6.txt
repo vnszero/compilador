@@ -1,0 +1,38 @@
+/*
+	programa para determinar se 3 arestas formam
+	um triangulo equilatero, isosceles ou escaleno
+*/
+start
+	int a1, a2, a3, prox;
+	do
+		print("Inserir aresta a1");
+		scan(a1);
+		print("Inserir aresta a2");
+		scan(a2);
+		print("Inserir aresta a3");
+		scan(a3);
+
+		if(a1 < a2 + a3 && a2 < a1 + a3 && a3 < a1 + a2) then
+			/* triangulo */
+			if(a1 == a2 && a1 == a3) then
+				/* equilatero */
+				print("Triangulo Equilatero");
+			else
+				/* isosceles ou escaleno */
+				if(a1 <> a2 && a1 <> a3) then
+					/* escaleno */
+					print("Triangulo Escaleno!!!");
+				else
+					/* isosceles */
+					print("Triangulo Isosceles!!!");
+				end
+			end
+		else
+			/* nao forma triangulo */
+			print("As arestas informadas nao formam triangulo")
+		end
+
+		print("Digite 0 para nova entrada ou outro numero para sair: ");
+		scan(prox);
+	while(prox == 0);
+exit
