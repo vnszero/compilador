@@ -10,10 +10,14 @@ int main(int argc, char const *argv[])
 		std::cout << "usage: "<<argv[0] << " [program]" << std::endl;
 		exit(1);
 	}
-	
+
 	try{
+		Lexeme lex;
 		LexicalAnalysis l(argv[1]);
-		std::cout << l.nextToken().str() << std::endl;
+		while((lex = l.nextToken()).type > 0){
+			std::cout << lex.str() << std::endl;
+		}
+		std::cout << lex.str() << std::endl;
 	}catch(const std::string& error){
 		std::cerr << error << std::endl;
 	}

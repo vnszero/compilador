@@ -1,19 +1,19 @@
 #include "SymbolTable.h"
-#include<string>
-SymbolTable::SymbolTable(){
+
+SymbolTable::SymbolTable() {
 	// Symbols
 	m_symbols[";"] = TT_SEMICOLON;
 	m_symbols["="] = TT_ASSIGN;
 
-	// Logic Operators
+	// Logic operators
 	m_symbols["=="] = TT_EQUAL;
-	m_symbols["!"] = TT_NOT_EQUAL;
+	m_symbols["!="] = TT_NOT_EQUAL;
 	m_symbols["<"] = TT_LOWER;
 	m_symbols["<="] = TT_LOWER_EQUAL;
 	m_symbols[">"] = TT_GREATER;
 	m_symbols[">="] = TT_GREATER_EQUAL;
 
-	// Aritmetic Operators
+	// Arithmetic operators
 	m_symbols["+"] = TT_ADD;
 	m_symbols["-"] = TT_SUB;
 	m_symbols["*"] = TT_MUL;
@@ -33,14 +33,15 @@ SymbolTable::SymbolTable(){
 	m_symbols["false"] = TT_FALSE;
 	m_symbols["read"] = TT_READ;
 	m_symbols["not"] = TT_NOT;
-
 }
-SymbolTable::~SymbolTable(){
+
+SymbolTable::~SymbolTable() {
 }
 
 bool SymbolTable::contains(const std::string& token) const {
 	return m_symbols.find(token) != m_symbols.end();
 }
-enum TokenType SymbolTable::find(const std::string token) {
-	return this->contains(token) ? m_symbols[token] : m_symbols[TT_INVALID_TOKEN];
+
+enum TokenType SymbolTable::find(const std::string& token) {
+	return this->contains(token) ? m_symbols[token] : TT_VAR;
 }

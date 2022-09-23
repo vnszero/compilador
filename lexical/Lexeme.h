@@ -1,8 +1,8 @@
 #ifndef LEXEME_H
 #define LEXEME_H
 
+#include <string>
 #include <sstream>
-#include <string.h>
 #include "TokenType.h"
 
 struct Lexeme {
@@ -15,7 +15,7 @@ struct Lexeme {
 	const std::string str() {
 		std::stringstream ss;
 
-		ss << "(\"" << token << "\", " << type << ")";
+		ss << "(\"" << token << "\", " << tt2str(type) << ")";
 		return ss.str();
 	}
 };

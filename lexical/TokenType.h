@@ -1,53 +1,55 @@
 #ifndef TOKEN_TYPE_H
 #define TOKEN_TYPE_H
 
+#include <string>
+
 enum TokenType {
 	// Specials
-	TT_UNEXPECTED_EOF 	= -2,
-	TT_INVALID_TOKEN 	= -1,
-	TT_END_OF_FILE		=  0,
+	TT_UNEXPECTED_EOF = -2,
+	TT_INVALID_TOKEN  = -1,
+	TT_END_OF_FILE    =  0,
 
 	// Symbols
-	TT_SEMICOLON,		// ;
-	TT_ASSIGN,			// =
+	TT_SEMICOLON,     // ;
+	TT_ASSIGN,        // =
 
-	// Logic Operators
-	TT_EQUAL,			// ==
-	TT_NOT_EQUAL,		// !=
-	TT_LOWER,			// <
-	TT_LOWER_EQUAL,		// <=
-	TT_GREATER,			// >
-	TT_GREATER_EQUAL,	// >=
+	// Logic operators
+	TT_EQUAL,         // ==
+	TT_NOT_EQUAL,     // !=
+	TT_LOWER,         // <
+	TT_LOWER_EQUAL,   // <=
+	TT_GREATER,       // >
+	TT_GREATER_EQUAL, // >=
 
-	// Aritmetic Operators
-	TT_ADD,				// +
-	TT_SUB,				// -
-	TT_MUL,				// *
-	TT_DIV,				// /
-	TT_MOD,				// %
+	// Arithmetic operators
+	TT_ADD,           // +
+	TT_SUB,           // -
+	TT_MUL,           // *
+	TT_DIV,           // /
+	TT_MOD,           // %
 
 	// Keywords
-	TT_PROGRAM,			// program
-	TT_WHILE,			// while
-	TT_DO,				// do
-	TT_DONE,			// done
-	TT_IF,				// if
-	TT_THEN,			// then
-	TT_ELSE,			// else
-	TT_OUTPUT,			// output
-	TT_TRUE,			// true
-	TT_FALSE,			// false
-	TT_READ,			// read
-	TT_NOT,				// not
+	TT_PROGRAM,       // program
+	TT_WHILE,         // while
+	TT_DO,            // do
+	TT_DONE,          // done
+	TT_IF,            // if
+	TT_THEN,          // then
+	TT_ELSE,          // else
+	TT_OUTPUT,        // output
+	TT_TRUE,          // true
+	TT_FALSE,         // false
+	TT_READ,          // read
+	TT_NOT,           // not
 
 	// Others
-	TT_NUMBER,			// number
-	TT_ID,				// identifier
+	TT_NUMBER,        // number
+	TT_VAR            // variable
 
 };
 
-inline std::string tt2str(enum TokenType type){
-	switch (type){
+inline std::string tt2str(enum TokenType type) {
+	switch (type) {
 		// Specials
 		case TT_UNEXPECTED_EOF:
 			return "UNEXPECTED_EOF";
@@ -58,11 +60,11 @@ inline std::string tt2str(enum TokenType type){
 
 		// Symbols
 		case TT_SEMICOLON:
-			return "SEMICOLON:";
+			return "SEMICOLON";
 		case TT_ASSIGN:
 			return "ASSIGN";
 
-		// Logic Operators
+		// Logic operators
 		case TT_EQUAL:
 			return "EQUAL";
 		case TT_NOT_EQUAL:
@@ -70,13 +72,13 @@ inline std::string tt2str(enum TokenType type){
 		case TT_LOWER:
 			return "LOWER";
 		case TT_LOWER_EQUAL:
-			return "LOWER_EQUA";
+			return "LOWER_EQUAL";
 		case TT_GREATER:
 			return "GREATER";
 		case TT_GREATER_EQUAL:
 			return "GREATER_EQUAL";
 
-		// Aritmetic Operators
+		// Arithmetic operators
 		case TT_ADD:
 			return "ADD";
 		case TT_SUB:
@@ -117,8 +119,9 @@ inline std::string tt2str(enum TokenType type){
 		// Others
 		case TT_NUMBER:
 			return "NUMBER";
-		case TT_ID:
-			return "ID";
+		case TT_VAR:
+			return "VAR";
+
 		default:
 			throw std::string("invalid token type");
 	}
