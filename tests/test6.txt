@@ -4,35 +4,38 @@
 */
 start
 	int a1, a2, a3, prox;
+	a1 = 3;
+	a2 = 3.4;
+	a3 = 2;
 	do
-		print("Inserir aresta a1");
+		print({Inserir aresta a1});
 		scan(a1);
-		print("Inserir aresta a2");
+		print({Inserir aresta a2});
 		scan(a2);
-		print("Inserir aresta a3");
+		print({Inserir aresta a3});
 		scan(a3);
 
 		if(a1 < a2 + a3 && a2 < a1 + a3 && a3 < a1 + a2) then
 			/* triangulo */
 			if(a1 == a2 && a1 == a3) then
 				/* equilatero */
-				print("Triangulo Equilatero");
+				print({Triangulo Equilatero});
 			else
 				/* isosceles ou escaleno */
 				if(a1 <> a2 && a1 <> a3) then
 					/* escaleno */
-					print("Triangulo Escaleno!!!");
+					print({Triangulo Escaleno!!!});
 				else
 					/* isosceles */
-					print("Triangulo Isosceles!!!");
+					print({Triangulo Isosceles!!!});
 				end
 			end
 		else
 			/* nao forma triangulo */
-			print("As arestas informadas nao formam triangulo")
+			print({As arestas informadas nao formam triangulo})
 		end
 
-		print("Digite 0 para nova entrada ou outro numero para sair: ");
+		print({Digite 0 para nova entrada ou outro numero para sair: });
 		scan(prox);
 	while(prox == 0);
 exit
