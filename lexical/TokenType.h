@@ -49,6 +49,7 @@ enum TokenType {
 	TT_LEFT_PAR,	  // (
 	TT_RIGHT_PAR,	  // )
 	TT_SEMICOLON,     // ;
+	TT_COLON,		  // :
 
 	// Zebras
 	TT_ID,            // identifier
@@ -138,6 +139,8 @@ inline std::string tt2str(enum TokenType type) {
 			return "RIGHT_PAR";
 		case TT_SEMICOLON:
 			return "SEMICOLON";
+		case TT_COLON:
+			return "COLON";
 
 		// Zebras
 		case TT_ID:

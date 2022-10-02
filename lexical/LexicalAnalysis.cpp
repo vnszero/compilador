@@ -92,7 +92,7 @@ Lexeme LexicalAnalysis::nextToken() {
 				else if (c == '=') { // EQUAL or ASSIGN
 					lex.token += (char) c;
 					state = EQUAL_ASSIGN_LINE_STATE;
-				} else if (c == ',' || c == '(' || c == ')' || c == ';') {
+				} else if (c == ',' || c == '(' || c == ')' || c == ';' || c == ':') {
 					lex.token += (char) c;
 					state = ST_FIND_STATE;
 				}
@@ -126,7 +126,7 @@ Lexeme LexicalAnalysis::nextToken() {
 						state = ERROR_STATE;
 					}
 				}
-				break;
+				break;//até aqui
 			case COMMENT_STATE: // Start comment machine
 				if (c == '*') {
 					state = MULTI_LINE_COMMENT_STATE;
