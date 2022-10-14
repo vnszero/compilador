@@ -22,7 +22,7 @@ lexical/SymbolTable.o: lexical/TokenType.h
 
 lexical/LexicalAnalysis.o: lexical/LexicalAnalysis.h lexical/Lexeme.h lexical/SymbolTable.h
 
-syntatic/SyntaticAnalysis.o:
+syntatic/SyntaticAnalysis.o: syntatic/SyntaticAnalysis.h
 
 $(TARGET):	$(OBJS)
 			$(CXX) -o $(TARGET) $(OBJS)

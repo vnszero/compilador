@@ -15,6 +15,19 @@ class SyntaticAnalysis {
 		void advance();
 		void eat(enum TokenType type);
 		void showError();
+
+		void procProgram();
+		void procCmdList();
+		void procCmd();
+		void procAssign();
+		void procOutput();
+		void procIf();
+		void procWhile();
+		void procBoolExpr();
+		void procIntExpr();
+		void procIntTerm();
+		void procVar();
+		void procConst();
 };
 
 #endif
