@@ -5,7 +5,8 @@ TARGET = main
 
 OBJS = main.o \
 		lexical/SymbolTable.o \
-		lexical/LexicalAnalysis.o
+		lexical/LexicalAnalysis.o \
+		syntatic/SyntaticAnalysis.o
 
 all: $(TARGET)
 
@@ -21,6 +22,7 @@ lexical/SymbolTable.o: lexical/TokenType.h
 
 lexical/LexicalAnalysis.o: lexical/LexicalAnalysis.h lexical/Lexeme.h lexical/SymbolTable.h
 
+syntatic/SyntaticAnalysis.o: syntatic/SyntaticAnalysis.h
 
 $(TARGET):	$(OBJS)
 			$(CXX) -o $(TARGET) $(OBJS)
