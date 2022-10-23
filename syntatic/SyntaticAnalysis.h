@@ -44,9 +44,11 @@ class SyntaticAnalysis {
 		// <assignstmt> ::= <identifier> TT_ASSIGN <simpleexpr>
 		void procAssignStmt();
 
-		// <ifstmt> ::= TT_IF <condition> TT_THEN <stmtlist> TT_END |
-		//				TT_IF <condition> TT_THEN <stmtlist> TT_ELSE <stmtlist> TT_END
+		// <ifstmt> ::= TT_IF <condition> TT_THEN <stmtlist> <ifstmtprime>
 		void procIfStmt();
+
+		// <ifstmtprime> ::= TT_END | TT_ELSE <stmtlist> TT_END
+		void procIfStmtPrime();
 
 		// <condition> ::= <expression>
 		void procCondition();
@@ -66,16 +68,25 @@ class SyntaticAnalysis {
 		// <writable> ::= <simpleexpr> | <literal>
 		void procWritable();
 
-		// <expression> ::= <simpleexpr> | <simpleexpr> <relop> <simpleexpr>
+		// <expression> ::= <simpleexpr> <expressionprime>
 		void procExpression();
 
-		// <simpleexpr> ::= <term> | <simpleexpr> <addop> <term>
+		// <expressionprime> ::= <relop> <simpleexpr> <expressionprime>
+		void procExpressionPrime();
+
+		// <simpleexpr> ::= <term> <simpleexprprime>
 		void procSimpleExpr();
 
-		// <term> ::= <fatora> | <term> <mulop> <fatora>
+		// <simpleexprprime> ::= <addop> <term> <simpleexprprime> | LAMBDA
+		void procSimpleExprPrime();
+
+		// <term> ::= <fatora> <termprime>
 		void procTerm();
 
-		// <fatora> ::= <factor> | TT_NOT <factor> | TT_SUB <factor>
+		// <termprime> ::= <mulop> <fatora> <termprime> | LAMBDA
+		void procTermPrime();
+
+		// <fatora> ::= [ TT_NOT | TT_SUB ] <factor>
 		void procFatora();
 
 		// <factor> ::= <identifier> | <constant> | TT_LEFT_PAR <expression> TT_RIGHT_PAR

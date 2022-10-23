@@ -32,10 +32,10 @@ start
 			end
 		else
 			/* nao forma triangulo */
-			print({As arestas informadas nao formam triangulo})
+			print({As arestas informadas nao formam triangulo});
 		end
 
 		print({Digite 0 para nova entrada ou outro numero para sair: });
 		scan(prox);
-	while(prox == 0);
+	while(prox == 0) end
 exit
