@@ -3,6 +3,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include "SyntaticAnalysis.h"
+#include <cstring>
 
 SyntaticAnalysis::SyntaticAnalysis(LexicalAnalysis& lex) :
 	m_lex(lex), m_current(lex.nextToken()) {
@@ -26,25 +27,37 @@ void SyntaticAnalysis::eat(enum TokenType type) {
 		advance();
 	} else {
 		showError();
+
+		// SEMICOLON will be the tuner token
+		if (type == TT_SEMICOLON) {
+			do {
+				advance();
+				if (type == m_current.type) {
+					advance();
+					break;
+				}
+			} while (1);
+		}
+
 	}
 }
 
 void SyntaticAnalysis::showError() {
-	std::cout << std::setw(2) << std::setfill('0') << m_lex.line() << ": ";
+	std::cout << "\033[1;31m" << std::setw(2) << std::setfill('0') << m_lex.line() << ": " << "\033[0m";
 
 	switch (m_current.type) {
 		case TT_INVALID_TOKEN:
-			std::cout << "Lexema invalido [" << m_current.token << "]" << std::endl;
+			std::cout << "\033[1;31m" << "Lexema invalido [" << m_current.token << "]" << "\033[0m" << std::endl;
 			break;
 		case TT_UNEXPECTED_EOF:
 		case TT_END_OF_FILE:
-			std::cout << "Fim de arquivo inesperado" << std::endl;
+			std::cout << "\033[1;31m" << "Fim de arquivo inesperado" << "\033[0m" << std::endl;
 			break;
 		default:
-			std::cout << "Lexema nao esperado [" << m_current.token << "]" << std::endl;
+			std::cout << "\033[1;31m" << "Lexema nao esperado [" << m_current.token << "]" << "\033[0m" << std::endl;
 			break;
 	}
-	exit(1);
+	// exit(1); // try to recover from error
 }
 
 /* TP base */
