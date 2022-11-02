@@ -41,7 +41,7 @@ SymbolTable::SymbolTable() {
 	m_symbols["("] = TT_LEFT_PAR;	    // (
 	m_symbols[")"] = TT_RIGHT_PAR;	    // )
 	m_symbols[";"] = TT_SEMICOLON;      // ;
-	m_symbols[":"] = TT_COLON;			// :
+	
 }
 
 SymbolTable::~SymbolTable() {
