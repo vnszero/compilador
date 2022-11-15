@@ -28,8 +28,11 @@ void SyntaticAnalysis::eat(enum TokenType type) {
 	} else {
 		showError();
 
-		// SEMICOLON will be the tuner token
-		if (type == TT_SEMICOLON) {
+		// SEMICOLON, ELSE, END and THEN will be tuner tokens
+		if (type == TT_SEMICOLON
+			|| type == TT_ELSE
+			|| type == TT_END
+			|| type == TT_THEN) {
 			do {
 				advance();
 				if (type == m_current.type) {
