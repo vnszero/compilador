@@ -89,10 +89,10 @@ void SyntaticAnalysis::procDeclList(/*no param*/) { //no return
 // <decl> ::= <type> <identlist> TT_SEMICOLON
 // First(<decl>) = { TT_INT, TT_FLOAT, TT_STRING }
 void SyntaticAnalysis::procDecl(/*no param*/) { //no return
-	SemanticBody sb;
-	sb = procType();
+	SemanticBody ib;
+	ib = procType();
 	//set sb based on types
-	procIdentList(sb);
+	procIdentList(ib);
 	eat(TT_SEMICOLON);
 }
 
@@ -110,26 +110,26 @@ void SyntaticAnalysis::procIdentList(SemanticBody sb) { //no return
 // <type> ::= TT_INT | TT_FLOAT | TT_STRING
 // First(<type>) = { TT_INT, TT_FLOAT, TT_STRING }
 SemanticBody SyntaticAnalysis::procType(/*no param*/) { //-> SemanticBody
-	SemanticBody sb;
+	SemanticBody ib;
 	switch(m_current.type) {
 		case TT_INT:
 			eat(TT_INT);
-			sb.setType('I');
+			ib.setType('I');
 			break;
 		case TT_FLOAT:
 			eat(TT_FLOAT);
-			sb.setType('F');
+			ib.setType('F');
 			break;
 		case TT_STRING:
 			eat(TT_STRING);
-			sb.setType('S');
+			ib.setType('S');
 			break;
 		default:
 			showError();
-			sb.setType('E');
+			ib.setType('E');
 			break;
 	}
-	return sb;
+	return ib;
 }
 
 // <stmtlist> ::= <stmt> { <stmt> }
@@ -185,7 +185,7 @@ void SyntaticAnalysis::procAssignStmt(/*no param*/) { //no return
 	ib_left = procIdentifier(sb);
 	eat(TT_ASSIGN);
 	ib_right = procSimpleExpr(sb);
-
+	std::cout << ib_left.getType() << " == " << ib_right.getType() << std::endl;
 	if(ib_left.getType() != ib_right.getType()){
 		std::cout << "semantic error procAssignStmt" << std::endl;
 	}
@@ -328,7 +328,8 @@ SemanticBody SyntaticAnalysis::procSimpleExpr(SemanticBody sb) { //-> SemanticBo
 	SemanticBody ib_term, ib_simple_expr_prime;
 	ib_term = procTerm(sb);
 	ib_simple_expr_prime = procSimpleExprPrime(sb);
-	if (ib_term.getType() != ib_simple_expr_prime.getType()) {
+	std::cout << ib_term.getType() << " == " << ib_simple_expr_prime.getType() << std::endl;
+	if (ib_term.getType() != ib_simple_expr_prime.getType() && ib_simple_expr_prime.getType() != 'L') {
 		std::cout << "semantic error procSimpleExpr" << std::endl;
 		ib_term.setType('E');
 	}
@@ -366,7 +367,8 @@ SemanticBody SyntaticAnalysis::procTerm(SemanticBody sb) { //-> SemanticBody
 	SemanticBody ib_fatora, ib_term_prime;
 	ib_fatora = procFatora(sb);
 	ib_term_prime = procTermPrime(sb);
-	if (ib_fatora.getType() != ib_term_prime.getType()) {
+	std::cout << ib_fatora.getType() << " == " << ib_term_prime.getType() << std::endl;
+	if (ib_fatora.getType() != ib_term_prime.getType() && ib_term_prime.getType() != 'L') {
 		std::cout << "semantic error procTerm" << std::endl;
 		ib_fatora.setType('E');
 	}
@@ -544,6 +546,7 @@ SemanticBody SyntaticAnalysis::procIdentifier(SemanticBody sb) { //-> SemanticBo
 	if (sb.getType() == 'C') {
 		//must find in symbol table
 		ib.setType(m_types.find(m_current.token));
+		std::cout << "check:" << m_types.find(m_current.token) << std::endl;
 	} else {
 		//must add in symbol table
 
@@ -551,6 +554,7 @@ SemanticBody SyntaticAnalysis::procIdentifier(SemanticBody sb) { //-> SemanticBo
 		if (!m_types.contains(m_current.token)) {
 			ib = sb;
 			m_types.insertType(m_current.token, ib.getType());
+			std::cout << "insert of: " << m_current.token << " as " << ib.getType() << std::endl;
 		} else {
 			//double declaration error
 			ib.setType('E');
