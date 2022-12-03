@@ -5,8 +5,8 @@
 #include "SyntaticAnalysis.h"
 #include <cstring>
 
-SyntaticAnalysis::SyntaticAnalysis(LexicalAnalysis& lex) :
-	m_lex(lex), m_current(lex.nextToken()) {
+SyntaticAnalysis::SyntaticAnalysis(LexicalAnalysis& lex, SemanticAnalysis& sem) :
+	m_lex(lex), m_sem(sem), m_current(lex.nextToken()) {
 }
 SyntaticAnalysis::~SyntaticAnalysis() {
 }
@@ -26,7 +26,7 @@ void SyntaticAnalysis::eat(enum TokenType type) {
 	if (type == m_current.type) {
 		advance();
 	} else {
-		showError();
+		showLexemeSyntaticError();
 
 		// SEMICOLON, ELSE, END and THEN will be tuner tokens
 		if (type == TT_SEMICOLON
@@ -45,8 +45,11 @@ void SyntaticAnalysis::eat(enum TokenType type) {
 	}
 }
 
-void SyntaticAnalysis::showError() {
-	std::cout << "\033[1;31m" << std::setw(2) << std::setfill('0') << m_lex.line() << ": " << "\033[0m";
+void SyntaticAnalysis::showLexemeSyntaticError() {
+	std::cout << "\033[1;31m"
+	<< "Erro sintatico linha "
+	<< std::setw(2) << std::setfill('0') << m_lex.line() << ": "
+	<< "\033[0m";
 
 	switch (m_current.type) {
 		case TT_INVALID_TOKEN:
@@ -125,7 +128,7 @@ SemanticBody SyntaticAnalysis::procType(/*no param*/) { //-> SemanticBody
 			ib.setType('S');
 			break;
 		default:
-			showError();
+			showLexemeSyntaticError();
 			ib.setType('E');
 			break;
 	}
@@ -172,7 +175,7 @@ void SyntaticAnalysis::procStmt(/*no param*/) { //no return
 			eat(TT_SEMICOLON);
 			break;
 		default:
-			showError();
+			showLexemeSyntaticError();
 			break;
 	}
 }
@@ -185,12 +188,9 @@ void SyntaticAnalysis::procAssignStmt(/*no param*/) { //no return
 	ib_left = procIdentifier(sb);
 	eat(TT_ASSIGN);
 	ib_right = procSimpleExpr(sb);
-	// std::cout << ib_left.getType() << " == " << ib_right.getType() << std::endl;
-	if (ib_left.getType() != ib_right.getType()) {
-		std::cout << "Semantic error line: " << m_lex.line()
-					<< ". Assignment to: " << ib_left.getType()
-					<< " from: " << ib_right.getType() << std::endl;
-	}
+
+	//procAssignStmt does not return, so just call without care about return
+	m_sem.semanticTypeAnalysis(ib_left, ib_right, m_lex.line());
 }
 
 // <ifstmt> ::= TT_IF <condition> TT_THEN <stmtlist> <ifstmtprime>
@@ -216,7 +216,7 @@ void SyntaticAnalysis::procIfStmtPrime(/*no param*/) { //no return
 			eat(TT_END);
 			break;
 		default:
-			showError();
+			showLexemeSyntaticError();
 			break;
 	}
 }
@@ -288,13 +288,8 @@ SemanticBody SyntaticAnalysis::procExpression(SemanticBody sb) { //-> SemanticBo
 	SemanticBody ib_expr, ib_expr_prime;
 	ib_expr = procSimpleExpr(sb);
 	ib_expr_prime = procExpressionPrime(sb);
-	if (ib_expr.getType() != ib_expr_prime.getType()) {
-		std::cout << "Semantic error line: " << m_lex.line()
-					<< ". Expected: " << ib_expr.getType()
-					<< " found: " << ib_expr_prime.getType() << std::endl;
-		ib_expr.setType('E');
-	}
-	return ib_expr;
+
+	return m_sem.semanticTypeAnalysis(ib_expr, ib_expr_prime, m_lex.line());
 }
 
 // <expressionprime> ::= <relop> <simpleexpr> <expressionprime> | LAMBDA
@@ -318,13 +313,7 @@ SemanticBody SyntaticAnalysis::procExpressionPrime(SemanticBody sb) { //-> Seman
 			ib_expr_prime.setType('L');
 			break; //LAMBDA
 	}
-	if (ib_simple_expr.getType() != ib_expr_prime.getType() && ib_expr_prime.getType() != 'L') {
-		std::cout << "Semantic error line: " << m_lex.line()
-					<< ". Expected: " << ib_simple_expr.getType()
-					<< " found: " << ib_expr_prime.getType() << std::endl;
-		ib_simple_expr.setType('E');
-	}
-	return ib_simple_expr;
+	return m_sem.semanticTypeAnalysis(ib_simple_expr, ib_expr_prime, m_lex.line());
 }
 
 // <simpleexpr> ::= <term> <simpleexprprime>
@@ -334,14 +323,7 @@ SemanticBody SyntaticAnalysis::procSimpleExpr(SemanticBody sb) { //-> SemanticBo
 	SemanticBody ib_term, ib_simple_expr_prime;
 	ib_term = procTerm(sb);
 	ib_simple_expr_prime = procSimpleExprPrime(sb);
-	// std::cout << ib_term.getType() << " == " << ib_simple_expr_prime.getType() << std::endl;
-	if (ib_term.getType() != ib_simple_expr_prime.getType() && ib_simple_expr_prime.getType() != 'L') {
-		std::cout << "Semantic error line: " << m_lex.line()
-					<< ". Expected: " << ib_term.getType()
-					<< " found: " << ib_simple_expr_prime.getType() << std::endl;
-		ib_term.setType('E');
-	}
-	return ib_term;
+	return m_sem.semanticTypeAnalysis(ib_term, ib_simple_expr_prime, m_lex.line());
 }
 
 // <simpleexprprime> ::= <addop> <term> <simpleexprprime> | LAMBDA
@@ -361,13 +343,7 @@ SemanticBody SyntaticAnalysis::procSimpleExprPrime(SemanticBody sb) { //-> Seman
 			ib_simple_expr_prime.setType('L');
 			break; //LAMBDA
 	}
-	if (ib_term.getType() != ib_simple_expr_prime.getType() && ib_simple_expr_prime.getType() != 'L') {
-		std::cout << "Semantic error line: " << m_lex.line()
-					<< ". Expected: " << ib_term.getType()
-					<< " found: " << ib_simple_expr_prime.getType() << std::endl;
-		ib_term.setType('E');
-	}
-	return ib_term;
+	return m_sem.semanticTypeAnalysis(ib_term, ib_simple_expr_prime, m_lex.line());
 }
 
 // <term> ::= <fatora> <termprime>
@@ -377,14 +353,7 @@ SemanticBody SyntaticAnalysis::procTerm(SemanticBody sb) { //-> SemanticBody
 	SemanticBody ib_fatora, ib_term_prime;
 	ib_fatora = procFatora(sb);
 	ib_term_prime = procTermPrime(sb);
-	// std::cout << ib_fatora.getType() << " == " << ib_term_prime.getType() << std::endl;
-	if (ib_fatora.getType() != ib_term_prime.getType() && ib_term_prime.getType() != 'L') {
-		std::cout << "Semantic error line: " << m_lex.line()
-					<< ". Expected: " << ib_fatora.getType()
-					<< " found: " << ib_term_prime.getType() << std::endl;
-		ib_fatora.setType('E');
-	}
-	return ib_fatora;
+	return m_sem.semanticTypeAnalysis(ib_fatora, ib_term_prime, m_lex.line());
 }
 
 // <termprime> ::= <mulop> <fatora> <termprime> | LAMBDA
@@ -404,13 +373,7 @@ SemanticBody SyntaticAnalysis::procTermPrime(SemanticBody sb) { //-> SemanticBod
 			ib_term_prime.setType('L');
 			break; //LAMBDA
 	}
-	if (ib_fatora.getType() != ib_term_prime.getType() && ib_term_prime.getType() != 'L') {
-		std::cout << "Semantic error line: " << m_lex.line()
-					<< ". Expected: " << ib_fatora.getType()
-					<< " found: " << ib_term_prime.getType() << std::endl;
-		ib_fatora.setType('E');
-	}
-	return ib_fatora;
+	return m_sem.semanticTypeAnalysis(ib_fatora, ib_term_prime, m_lex.line());
 }
 
 // <fatora> ::= [ TT_NOT | TT_SUB ] <factor>
@@ -447,7 +410,7 @@ SemanticBody SyntaticAnalysis::procFactor(SemanticBody sb) { //-> SemanticBody
 			eat(TT_RIGHT_PAR);
 			break;
 		default:
-			showError();
+			showLexemeSyntaticError();
 			ib.setType('E');
 			break;
 	}
@@ -479,7 +442,7 @@ void SyntaticAnalysis::procRelop(/*no param*/) { //no return
 			eat(TT_NOT_EQUAL);
 			break;
 		default:
-			showError();
+			showLexemeSyntaticError();
 			break;
 	}
 }
@@ -498,7 +461,7 @@ void SyntaticAnalysis::procAddOp(/*no param*/) { //no return
 			eat(TT_OR);
 			break;
 		default:
-			showError();
+			showLexemeSyntaticError();
 			break;
 	}
 }
@@ -517,7 +480,7 @@ void SyntaticAnalysis::procMulOp(/*no param*/) { //no return
 			eat(TT_AND);
 			break;
 		default:
-			showError();
+			showLexemeSyntaticError();
 			break;
 	}
 }
@@ -540,7 +503,7 @@ SemanticBody SyntaticAnalysis::procConstant(/*no param*/) { //-> SemanticBody
 			sb.setType('S');
 			break;
 		default:
-			showError();
+			showLexemeSyntaticError();
 			sb.setType('E');
 			break;
 	}
@@ -559,23 +522,10 @@ SemanticBody SyntaticAnalysis::procIdentifier(SemanticBody sb) { //-> SemanticBo
 	SemanticBody ib;
 	if (sb.getType() == 'C') {
 		//must find in symbol table
-		ib.setType(m_types.find(m_current.token));
-		// std::cout << "check:" << m_types.find(m_current.token) << std::endl;
+		ib.setType(m_sem.semanticSerch(m_current.token));
 	} else {
 		//must add in symbol table
-
-		//must check if it exists first
-		if (!m_types.contains(m_current.token)) {
-			ib = sb;
-			m_types.insertType(m_current.token, ib.getType());
-			// std::cout << "insert of: " << m_current.token << " as " << ib.getType() << std::endl;
-		} else {
-			//double declaration error
-			ib.setType('E');
-			std::cout << "Semantic error line: " << m_lex.line()
-					<< ". double declaration of: " << m_current.token
-					<< std::endl;
-		}
+		ib = m_sem.semanticDeclarationAnalysis(m_current.token, m_lex.line(), sb);
 	}
 	eat(TT_ID);
 	return ib;

@@ -8,6 +8,7 @@ OBJS = main.o \
 		lexical/LexicalAnalysis.o \
 		semantic/SemanticBody.o \
 		semantic/TypeTable.o \
+		semantic/SemanticAnalysis.o \
 		syntatic/SyntaticAnalysis.o
 
 all: $(TARGET)
@@ -27,6 +28,8 @@ lexical/LexicalAnalysis.o: lexical/LexicalAnalysis.h lexical/Lexeme.h lexical/Sy
 semantic/SemanticBody.o: semantic/SemanticBody.h
 
 semantic/TypeTable.o: semantic/TypeTable.h
+
+semantic/SemanticAnalysis.o: semantic/SemanticAnalysis.h semantic/SemanticBody.h semantic/TypeTable.h
 
 syntatic/SyntaticAnalysis.o: syntatic/SyntaticAnalysis.h
 

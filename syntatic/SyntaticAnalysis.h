@@ -2,22 +2,23 @@
 #define SYNTATIC_ANALYSIS_H
 
 #include "../lexical/LexicalAnalysis.h"
+#include "../semantic/SemanticAnalysis.h"
 #include "../semantic/SemanticBody.h"
 #include "../semantic/TypeTable.h"
 
 class SyntaticAnalysis {
 	public:
-		SyntaticAnalysis(LexicalAnalysis& lex);
+		SyntaticAnalysis(LexicalAnalysis& lex, SemanticAnalysis& sem);
 		virtual ~SyntaticAnalysis();
 
 		void start();
 	private:
 		LexicalAnalysis& m_lex;
+		SemanticAnalysis& m_sem;
 		Lexeme m_current;
-		TypeTable m_types;
 		void advance();
 		void eat(enum TokenType type);
-		void showError();
+		void showLexemeSyntaticError();
 
 		/* TP base */
 		// <program> ::= TT_START [ <decllist> ] <stmtlist> TT_EXIT

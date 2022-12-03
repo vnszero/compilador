@@ -13,17 +13,6 @@ class SemanticBody {
 	private:
 		// here comes all semantic properties
 		char m_type;
-		/*
-			identifiers:
-				I - Integer
-				F - Float
-				S - String/Literal
-
-			support:
-				C - Control
-				E - Error
-				L - Lambda
-		*/
 };
 
 #endif

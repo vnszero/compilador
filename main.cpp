@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include "lexical/LexicalAnalysis.h"
 #include "syntatic/SyntaticAnalysis.h"
+#include "semantic/SemanticAnalysis.h"
 
 int main(int argc, char const *argv[])
 {
@@ -15,7 +16,8 @@ int main(int argc, char const *argv[])
 	try{
 		Lexeme lex;
 		LexicalAnalysis l(argv[1]);
-		SyntaticAnalysis s(l);
+		SemanticAnalysis sem;
+		SyntaticAnalysis s(l, sem);
 		// Lexical Test
 		// while((lex = l.nextToken()).type > 0){
 		// 	std::cout << lex.str() << std::endl;
