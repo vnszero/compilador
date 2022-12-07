@@ -13,7 +13,7 @@ class SemanticAnalysis {
 		virtual ~SemanticAnalysis();
 
 		// Semantic rulers
-		char semanticSerch(std::string token);
+		char semanticSerch(std::string token, int line);
 		SemanticBody semanticTypeAnalysis(SemanticBody left, SemanticBody right, int line);
 		SemanticBody semanticDeclarationAnalysis(std::string token, int line, SemanticBody sb);
 

@@ -4,6 +4,10 @@
 #include <cctype>
 #include "LexicalAnalysis.h"
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <cstdlib>
+
 #define START_STATE 1
 #define COMMENT_STATE 2
 #define MULTI_LINE_COMMENT_STATE 3
@@ -58,11 +62,12 @@ Lexeme LexicalAnalysis::nextToken() {
 					m_line++;
 					state = START_STATE;
 				} else if (c == '/') {
+					lex.token += (char) c;
 					state = COMMENT_STATE;
 				}
 
 				// Arithmetic operators flow
-				else if (c == '+' || c == '/' || c == '*' || c == '-') {
+				else if (c == '+' || c == '*' || c == '-') {
 					lex.token += (char) c;
 					state = ST_FIND_STATE;
 				}
@@ -129,16 +134,20 @@ Lexeme LexicalAnalysis::nextToken() {
 				break;//até aqui
 			case COMMENT_STATE: // Start comment machine
 				if (c == '*') {
+					lex.token = "";
 					state = MULTI_LINE_COMMENT_STATE;
 				} else if (c == '/') {
+					lex.token = "";
 					state = ONE_LINE_COMMENT_STATE;
 				} else {
 					if (c == -1) {
 						lex.type = TT_UNEXPECTED_EOF;
 						state = ERROR_STATE;
 					} else {
-						lex.type = TT_INVALID_TOKEN;
-						state = ERROR_STATE;
+						//its TT_DIV
+						ungetc(c,m_input);
+						//lex.token += (char) c;
+						state = ST_FIND_STATE;
 					}
 				}
 				break;

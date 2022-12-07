@@ -522,7 +522,7 @@ SemanticBody SyntaticAnalysis::procIdentifier(SemanticBody sb) { //-> SemanticBo
 	SemanticBody ib;
 	if (sb.getType() == 'C') {
 		//must find in symbol table
-		ib.setType(m_sem.semanticSerch(m_current.token));
+		ib.setType(m_sem.semanticSerch(m_current.token, m_lex.line()));
 	} else {
 		//must add in symbol table
 		ib = m_sem.semanticDeclarationAnalysis(m_current.token, m_lex.line(), sb);

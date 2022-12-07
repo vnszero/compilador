@@ -7,7 +7,14 @@ SemanticAnalysis::SemanticAnalysis() {
 SemanticAnalysis::~SemanticAnalysis() {
 }
 
-char SemanticAnalysis::semanticSerch(std::string token) {
+char SemanticAnalysis::semanticSerch(std::string token, int line) {
+	char analysis = m_types.find(token);
+	if(analysis == 'E'){
+		std::cout << "\033[1;33m"
+			<< "Erro semantico linha "
+			<< std::setw(2) << std::setfill('0') << line << ": "
+			<< token << " não declarado." << "\033[0m" << std::endl;
+	}
 	return m_types.find(token);
 	// std::cout << "check:" << m_types.find(m_current.token) << std::endl;
 }
@@ -15,13 +22,15 @@ char SemanticAnalysis::semanticSerch(std::string token) {
 SemanticBody SemanticAnalysis::semanticTypeAnalysis(SemanticBody left, SemanticBody right, int line) {
 	/*
 		The order of the SemanticBody parameters care, Lambdas in 2nd place always
+
+		
 	*/
 
 	// std::cout << ib_left.getType() << " == " << ib_right.getType() << std::endl;
 	if (right.getType() == 'E') {
 		//error message has already been shown
 		left.setType('E');
-	} else if (left.getType() != right.getType() && right.getType() != 'L') {
+	} else if (left.getType() != right.getType() && right.getType() != 'L' && left.getType() != 'E') {
 		std::cout << "\033[1;33m"
 			<< "Erro semantico linha "
 			<< std::setw(2) << std::setfill('0') << line

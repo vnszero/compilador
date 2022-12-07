@@ -139,8 +139,6 @@ inline std::string tt2str(enum TokenType type) {
 			return "RIGHT_PAR";
 		case TT_SEMICOLON:
 			return "SEMICOLON";
-		case TT_COLON:
-			return "COLON";
 
 		// Zebras
 		case TT_ID:
