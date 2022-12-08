@@ -23,13 +23,21 @@ SemanticBody SemanticAnalysis::semanticTypeAnalysis(SemanticBody left, SemanticB
 	/*
 		The order of the SemanticBody parameters care, Lambdas in 2nd place always
 
-		
+
 	*/
 
 	// std::cout << ib_left.getType() << " == " << ib_right.getType() << std::endl;
 	if (right.getType() == 'E') {
 		//error message has already been shown
 		left.setType('E');
+	} else if ((left.getType() == 'I' && right.getType() == 'F') || (left.getType() == 'F' && right.getType() == 'I')){
+		std::cout << "\033[1;35m"
+			<< "Aviso "
+			<< std::setw(2) << std::setfill('0') << line
+			<< ": Esperado: " << m_types.getFullNameOfType(left.getType())
+			<< " Encontrado: " << m_types.getFullNameOfType(right.getType())
+			<< "\033[0m" << std::endl;
+		left.setType('F');
 	} else if (left.getType() != right.getType() && right.getType() != 'L' && left.getType() != 'E') {
 		std::cout << "\033[1;33m"
 			<< "Erro semantico linha "
